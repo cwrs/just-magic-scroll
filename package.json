@@ -4,7 +4,7 @@
   "description": "A react component which has a scrollbar but renders (and loads) only visible elements to improve browser performance. The elements need to have the same height.",
   "main": "index.js",
   "scripts": {
-    "compile": "babel --presets es2015,stage-0 -d lib/ src/main/js/",
+    "compile": "babel --presets es2015,stage-0,react -d lib/ src/main/js/",
     "lint": "eslint --ext .js --ext .jsx --ext .json --fix src/main/js/* src/test/js/*",
     "lint:blame": "eslint --ext .js --ext .jsx --ext .json src/main/js/* src/test/js/*",
     "lint:report": "eslint --ext .js --ext .jsx --ext .json -f checkstyle -o build/reports/checkstyle/eslint-output.xml src/main/js/* src/test/js/*",
@@ -27,8 +27,11 @@
   },
   "homepage": "https://github.com/justsocialapps/just-magic-scroll#readme",
   "dependencies": {
+    "babel-preset-react": "^6.16.0",
+    "babelify": "^7.3.0",
     "lodash": "4.13.1",
-    "react": "15.3.1"
+    "react": "^15.3.1",
+    "react-dom": "^15.3.2"
   },
   "devDependencies": {
     "babel-cli": "^6.16.0",

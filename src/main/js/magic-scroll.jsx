@@ -148,7 +148,7 @@ export class MagicScroll extends Component {
 
         const visibleItems = [];
 
-        for (const i = start; i < end; i++) {
+        for (let i = start; i < end; i++) {
             visibleItems.push( rowFunction(i) );
         }
 
