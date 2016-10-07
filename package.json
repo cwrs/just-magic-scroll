@@ -4,11 +4,11 @@
   "description": "A react component which has a scrollbar but renders (and loads) only visible elements to improve browser performance. The elements need to have the same height.",
   "main": "index.js",
   "scripts": {
-    "compile": "babel --presets es2015,stage-0,react -d lib/ src/main/js/",
+    "compile": "babel -d lib/ src/main/js/",
     "lint": "eslint --ext .js --ext .jsx --ext .json --fix src/main/js/* src/test/js/*",
     "lint:blame": "eslint --ext .js --ext .jsx --ext .json src/main/js/* src/test/js/*",
     "lint:report": "eslint --ext .js --ext .jsx --ext .json -f checkstyle -o build/reports/checkstyle/eslint-output.xml src/main/js/* src/test/js/*",
-    "test": "JUNIT_REPORT_PATH=./build/reports/tests/mocha-results.xml JUNIT_REPORT_STACK=1 BABEL_ENV=test mocha --require ./src/test/js/setup.js --compilers js:babel-core/register --recursive src/test/js/",
+    "test": "JUNIT_REPORT_PATH=./build/reports/tests/mocha-results.xml JUNIT_REPORT_STACK=1 BABEL_ENV=test mocha --require ./src/test/js/setup.js --compilers js:babel-core/register --recursive ./src/test/js/",
     "test-debug": "BABEL_ENV=test mocha --require ./src/test/js/setup.js --compilers js:babel-core/register --recursive src/test/js/ --debug-brk",
     "prepublish": "npm run compile"
   },
@@ -34,9 +34,11 @@
     "react-dom": "^15.3.2"
   },
   "devDependencies": {
+    "babel": "^6.5.2",
     "babel-cli": "^6.16.0",
     "babel-core": "^6.17.0",
     "babel-loader": "^6.2.5",
+    "babel-plugin-module-alias": "^1.6.0",
     "babel-polyfill": "^6.16.0",
     "babel-preset-es2015": "^6.16.0",
     "babel-preset-react": "^6.16.0",
