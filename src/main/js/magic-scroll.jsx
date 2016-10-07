@@ -1,5 +1,4 @@
 import React, { Component, PropTypes } from 'react';
-import _get from 'lodash/get';
 
 /**
  * wrapper used to throttle scroll and resize events which fire at a very high rate and would produce a lot of useless
@@ -124,7 +123,7 @@ export class MagicScroll extends Component {
 
     update(props) {
         const { itemCount, fetch, itemHeight } = props;
-        const viewPortHeight = Math.max(document.documentElement.clientHeight, _get(window, 'innerHeight', 0));
+        const viewPortHeight = Math.max(document.documentElement.clientHeight, window && window.innerHeight || 0);
         const numberOfElementsInViewPort = Math.ceil( viewPortHeight / itemHeight );
 
         const { magicScrollContainer } = this.refs;
