@@ -7,7 +7,7 @@ import expect from 'expect';
 import expectElement from 'expect-element';
 expect.extend(expectElement);
 
-import { MagicScroll } from 'just-magic-scroll/magic-scroll.jsx';
+import { MagicScroll } from 'magic-scroll.jsx';
 
 describe('MagicScroll component test', () => {
 

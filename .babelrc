@@ -1,8 +1,8 @@
 {
     "presets": ["react", "es2015", "stage-0"],
     "plugins": [
-        ["module-resolver", [
-            { "src": "./src/main/js", "expose": "just-magic-scroll" }
-        ]]
+        ["module-resolver", {
+            "root": ["./src/main/js"]
+        }]
     ]
 }
