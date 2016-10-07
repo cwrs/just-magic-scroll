@@ -1,8 +1,6 @@
 /*eslint-env node, mocha */
 
-import React from 'react';
-import ReactDOM from 'react-dom';
-import ReactTestUtils, { Simulate } from 'react-addons-test-utils';
+import ReactTestUtils from 'react-addons-test-utils';
 import expect from 'expect';
 import expectElement from 'expect-element';
 expect.extend(expectElement);

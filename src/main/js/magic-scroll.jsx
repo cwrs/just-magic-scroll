@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from 'react';
+import { Component, PropTypes } from 'react';
 
 /**
  * wrapper used to throttle scroll and resize events which fire at a very high rate and would produce a lot of useless
@@ -8,23 +8,34 @@ import React, { Component, PropTypes } from 'react';
  *
  * @see https://developer.mozilla.org/en-US/docs/Web/Events/scroll
  *
- * @param h handler to wrap
+ * @param {function} handler handler to wrap
  * @return {*} the wrapped handler
  */
-function throttleEvents(h) {
-    if ( !window || !window.requestAnimationFrame ) {
-        return h;
+function throttleEvents(handler) {
+    if (!window || !window.requestAnimationFrame) {
+        return handler;
     }
     let free = true;
     return () => {
         if (free) {
             window.requestAnimationFrame(() => {
-                h();
+                handler();
                 free = true;
             });
         }
         free = false;
     };
+}
+
+function getViewPortHeight() {
+    let result = 0;
+    if (document && document.documentElement) {
+        result = Math.max(result, document.documentElement.clientHeight);
+    }
+    if (window && window.innerHeight) {
+        result = Math.max(result, window.innerHeight);
+    }
+    return result;
 }
 
 /**
@@ -40,7 +51,7 @@ export class MagicScroll extends Component {
         super(props);
         this.state = {
             start: 0,
-            end: Math.ceil( 2000 / this.props.itemHeight )
+            end: Math.ceil(2000 / this.props.itemHeight)
         };
         this.updateEvent = throttleEvents(this.updateEvent.bind(this));
     }
@@ -61,10 +72,9 @@ export class MagicScroll extends Component {
         }
 
         if (this.scrollableAncestor) {
-            // At the time of unmounting, the scrollable ancestor might no longer
-            // exist. Guarding against this prevents the following error:
-            //
-            //   Cannot read property 'removeEventListener' of undefined
+            //At the time of unmounting, the scrollable ancestor might no longer
+            //exist. Guarding against this prevents the following error:
+            //Cannot read property 'removeEventListener' of undefined
             this.scrollableAncestor.removeEventListener('scroll', this.updateEvent);
         }
         window.removeEventListener('resize', this.updateEvent);
@@ -94,26 +104,18 @@ export class MagicScroll extends Component {
         while (node.parentNode) {
             node = node.parentNode;
 
-            if (node === document) {
-                // This particular node does not have a computed style.
-                continue;
-            }
+            //This particular node does not have a computed style or does not have a scroll bar, it uses the window.
+            if (node !== document && node !== document.documentElement) {
+                const style = window.getComputedStyle(node);
+                const overflowY = style.getPropertyValue('overflow-y') || style.getPropertyValue('overflow');
 
-            if (node === document.documentElement) {
-                // This particular node does not have a scroll bar, it uses the window.
-                continue;
-            }
-
-            const style = window.getComputedStyle(node);
-            const overflowY = style.getPropertyValue('overflow-y') ||
-                style.getPropertyValue('overflow');
-
-            if (overflowY === 'auto' || overflowY === 'scroll') {
-                return node;
+                if (overflowY === 'auto' || overflowY === 'scroll') {
+                    return node;
+                }
             }
         }
 
-        // A scrollable ancestor element was not found, which means that we need to do stuff on window.
+        //A scrollable ancestor element was not found, which means that we need to do stuff on window.
         return window;
     }
 
@@ -123,20 +125,22 @@ export class MagicScroll extends Component {
 
     update(props) {
         const { itemCount, fetch, itemHeight } = props;
-        const viewPortHeight = Math.max(document.documentElement.clientHeight, window && window.innerHeight || 0);
-        const numberOfElementsInViewPort = Math.ceil( viewPortHeight / itemHeight );
+        const numberOfElementsInViewPort = Math.ceil(getViewPortHeight() / itemHeight);
 
         const { magicScrollContainer } = this.refs;
-        const relativeViewPortStart = magicScrollContainer ?  - magicScrollContainer.getBoundingClientRect().top : 0;
-        const topElementsHidden = Math.ceil( relativeViewPortStart / itemHeight );
+        const relativeViewPortStart = magicScrollContainer
+            ?  -magicScrollContainer.getBoundingClientRect().top
+            : 0;
+        const topElementsHidden = Math.ceil(relativeViewPortStart / itemHeight);
 
-        const start = Math.max( 0, topElementsHidden - 1 );
-        const end = Math.min( itemCount, topElementsHidden + numberOfElementsInViewPort + 1 );
+        const start = Math.max(0, topElementsHidden - 1);
+        const end = Math.min(itemCount, topElementsHidden + numberOfElementsInViewPort + 1);
 
         this.setState({
-            start, end
+            start,
+            end
         });
-        fetch( start, end );
+        fetch(start, end);
     }
 
 
@@ -147,15 +151,22 @@ export class MagicScroll extends Component {
 
         const visibleItems = [];
 
-        for (let i = start; i < end; i++) {
-            visibleItems.push( rowFunction(i) );
+        for (let index = start; index < end; index += 1) {
+            visibleItems.push(rowFunction(index));
         }
 
         return (
             <div className={this.props.className}
                  ref="magicScrollContainer"
-                 style={{ height: ( itemCount * itemHeight ) + 'px', position: 'relative' }}>
-                <div style={{ position: 'absolute', top: ( start * itemHeight ) + 'px', width: '100%'}}>
+                 style={{
+                     height: `${itemCount * itemHeight}px`,
+                     position: 'relative'
+                 }}>
+                <div style={{
+                    position: 'absolute',
+                    top: `${start * itemHeight}px`,
+                    width: '100%'
+                }}>
                     {visibleItems}
                 </div>
             </div>
@@ -165,18 +176,22 @@ export class MagicScroll extends Component {
 }
 
 MagicScroll.propTypes = {
+
     /**
      * the height of a single element
      */
     itemHeight: PropTypes.number.isRequired,
+
     /**
      * the amount of wrapped elements
      */
     itemCount: PropTypes.number.isRequired,
+
     /**
      * a function to get a specific element by its index
      */
     rowFunction: PropTypes.func.isRequired,
+
     /**
      * a function to trigger the load of the viewport, parameters are start and end (excluding) of the current viewed
      * page
