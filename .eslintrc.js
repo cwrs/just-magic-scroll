@@ -4,8 +4,9 @@ module.exports = {
         "commonjs": true,
         "es6": true
     },
-    "extends": "eslint:recommended",
+    "extends": ["eslint:recommended", "standard-react"],
     "parserOptions": {
+        "ecmaVersion": 6,
         "ecmaFeatures": {
             "experimentalObjectRestSpread": true,
             "jsx": true
@@ -252,6 +253,8 @@ module.exports = {
         "wrap-iife": "error",
         "wrap-regex": "error",
         "yield-star-spacing": "error",
-        "yoda": "error"
+        "yoda": "error",
+        "react/jsx-indent": [0, 4],
+        "react/jsx-indent-props": [0, 4]
     }
 };

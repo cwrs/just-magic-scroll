@@ -1,4 +1,4 @@
-import { Component, PropTypes } from 'react';
+import React, { Component, PropTypes } from 'react';
 
 /**
  * wrapper used to throttle scroll and resize events which fire at a very high rate and would produce a lot of useless
@@ -157,11 +157,11 @@ export class MagicScroll extends Component {
 
         return (
             <div className={this.props.className}
-                 ref="magicScrollContainer"
-                 style={{
-                     height: `${itemCount * itemHeight}px`,
-                     position: 'relative'
-                 }}>
+              ref="magicScrollContainer"
+              style={{
+                  height: `${itemCount * itemHeight}px`,
+                  position: 'relative'
+              }}>
                 <div style={{
                     position: 'absolute',
                     top: `${start * itemHeight}px`,
@@ -196,7 +196,13 @@ MagicScroll.propTypes = {
      * a function to trigger the load of the viewport, parameters are start and end (excluding) of the current viewed
      * page
      */
-    fetch: PropTypes.func.isRequired
+    fetch: PropTypes.func.isRequired,
+
+    /**
+     * the className which is added to the magic scoller
+     */
+    className: PropTypes.string
+
 };
 
 export default MagicScroll;

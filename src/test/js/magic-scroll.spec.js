@@ -1,5 +1,6 @@
 /*eslint-env node, mocha */
 
+import React from 'react';
 import ReactTestUtils from 'react-addons-test-utils';
 import expect from 'expect';
 import expectElement from 'expect-element';
@@ -20,7 +21,7 @@ describe('MagicScroll component test', () => {
     function renderMagicScroll(props = {}) {
         const validProps = Object.assign({}, defaultProps, props);
         const result = ReactTestUtils.renderIntoDocument(
-            <MagicScroll {...validProps}/>
+            <MagicScroll {...validProps} />
         );
         return ReactTestUtils.findRenderedComponentWithType(result, MagicScroll);
     }
