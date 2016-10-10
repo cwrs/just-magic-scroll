@@ -27,15 +27,25 @@ function throttleEvents(handler) {
     };
 }
 
-function getViewPortHeight() {
-    let result = 0;
-    if (document && document.documentElement) {
-        result = Math.max(result, document.documentElement.clientHeight);
+function getDocumentHeight() {
+    if (document && document.documentElement && document.documentElement.clientHeight) {
+         //transform to integer so 0 is returned instead of NaN
+        return document.documentElement.clientHeight | 0;
     }
+    return 0;
+
+}
+
+function getWindowHeight() {
     if (window && window.innerHeight) {
-        result = Math.max(result, window.innerHeight);
+        //transform to integer so 0 is returned instead of NaN
+        return  window.innerHeight | 0;
     }
-    return result;
+    return 0;
+}
+
+function getViewPortHeight() {
+    return Math.max(getDocumentHeight(), getWindowHeight());
 }
 
 /**

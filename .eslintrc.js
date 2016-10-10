@@ -114,7 +114,12 @@ module.exports = {
         "newline-per-chained-call": "error",
         "no-alert": "error",
         "no-array-constructor": "error",
-        "no-bitwise": "error",
+        "no-bitwise": [
+            "error", 
+            { 
+                "int32Hint": true 
+            }
+        ],
         "no-caller": "error",
         "no-catch-shadow": "error",
         "no-confusing-arrow": "error",
