@@ -27,27 +27,6 @@ function throttleEvents(handler) {
     };
 }
 
-function getDocumentHeight() {
-    if (document && document.documentElement && document.documentElement.clientHeight) {
-         //transform to integer so 0 is returned instead of NaN
-        return document.documentElement.clientHeight | 0;
-    }
-    return 0;
-
-}
-
-function getWindowHeight() {
-    if (window && window.innerHeight) {
-        //transform to integer so 0 is returned instead of NaN
-        return  window.innerHeight | 0;
-    }
-    return 0;
-}
-
-function getViewPortHeight() {
-    return Math.max(getDocumentHeight(), getWindowHeight());
-}
-
 /**
  * The MagicScroll component can be used to put elements in DOM only if they are inside the view port. It reacts on
  * scroll and resize events and calculates on demand which children are visible.
@@ -129,13 +108,24 @@ export class MagicScroll extends Component {
         return window;
     }
 
+    getViewPortHeight() {
+        const scrollableAncestor = this.scrollableAncestor || window;
+        if (scrollableAncestor === window) {
+            //transform to integer so 0 is returned instead of NaN
+            return window.innerHeight | 0;
+        }
+        return scrollableAncestor
+            ? scrollableAncestor.offsetHeight | 0
+            : 0;
+    }
+
     updateEvent() {
         this.update(this.props);
     }
 
     update(props) {
         const { itemCount, fetch, itemHeight } = props;
-        const numberOfElementsInViewPort = Math.ceil(getViewPortHeight() / itemHeight);
+        const numberOfElementsInViewPort = Math.ceil(this.getViewPortHeight() / itemHeight);
 
         const { magicScrollContainer } = this.refs;
         const relativeViewPortStart = magicScrollContainer
