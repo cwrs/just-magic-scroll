@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 /**
  * wrapper used to throttle scroll and resize events which fire at a very high rate and would produce a lot of useless
@@ -43,6 +44,9 @@ export class MagicScroll extends Component {
             end: Math.ceil(2000 / this.props.itemHeight)
         };
         this.updateEvent = throttleEvents(this.updateEvent.bind(this));
+        this.setScrollContainer = (element) => {
+            this.magicScrollContainer = element
+        };
     }
 
     componentDidMount() {
@@ -88,7 +92,7 @@ export class MagicScroll extends Component {
      *   as a fallback.
      */
     findScrollableAncestor() {
-        let node = this.refs.magicScrollContainer;
+        let node = this.magicScrollContainer;
 
         while (node.parentNode) {
             node = node.parentNode;
@@ -123,19 +127,27 @@ export class MagicScroll extends Component {
         this.update(this.props);
     }
 
+    getRelativeViewPortStart() {
+        const scrollableAncestor = this.scrollableAncestor || window;
+        //if the scrollbar scrolls the window directly or the scrollableAncestor scrolls relativly to the body
+        if (scrollableAncestor === window || scrollableAncestor.offsetParent === document.body) {
+            return this.magicScrollContainer
+                ? -this.magicScrollContainer.getBoundingClientRect().top
+                : 0;
+        }
+        //the scrollbar scrolls a single container
+        return scrollableAncestor.scrollTop;
+    }
+
     update(props) {
         const { itemCount, fetch, itemHeight } = props;
         const numberOfElementsInViewPort = Math.ceil(this.getViewPortHeight() / itemHeight);
 
-        const { magicScrollContainer } = this.refs;
-        const relativeViewPortStart = magicScrollContainer
-            ?  -magicScrollContainer.getBoundingClientRect().top
-            : 0;
+        const relativeViewPortStart = this.getRelativeViewPortStart();
         const topElementsHidden = Math.ceil(relativeViewPortStart / itemHeight);
 
         const start = Math.max(0, topElementsHidden - 1);
         const end = Math.min(itemCount, topElementsHidden + numberOfElementsInViewPort + 1);
-
         this.setState({
             start,
             end
@@ -157,7 +169,7 @@ export class MagicScroll extends Component {
 
         return (
             <div className={this.props.className}
-              ref="magicScrollContainer"
+              ref={this.setScrollContainer}
               style={{
                   height: `${itemCount * itemHeight}px`,
                   position: 'relative'

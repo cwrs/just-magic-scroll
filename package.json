@@ -1,6 +1,6 @@
 {
   "name": "just-magic-scroll",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "A react component which has a scrollbar but renders (and loads) only visible elements to improve browser performance. The elements need to have the same height.",
   "main": "index.js",
   "scripts": {
@@ -27,7 +27,8 @@
   },
   "homepage": "https://github.com/justsocialapps/just-magic-scroll#readme",
   "peerDependencies": {
-    "react": "15.x.x"
+    "react": "15.x.x",
+    "prop-types": "15.x.x"
   },
   "devDependencies": {
     "babel": "^6.5.2",
@@ -47,7 +48,7 @@
     "expect-jsx": "^2.6.0",
     "jsdom": "^9.4.1",
     "mocha": "^2.5.3",
-    "react-addons-test-utils": "^15.2.1",
-    "react-dom": "^15.3.2"
+    "react-dom": "^15.6.2",
+    "prop-types": "15.6.1"
   }
 }
